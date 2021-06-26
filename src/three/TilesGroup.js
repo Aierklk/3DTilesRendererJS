@@ -33,9 +33,9 @@ export class TilesGroup extends Group {
 
 		if ( this.matrixWorldNeedsUpdate || force ) {
 
-			if ( this.parent === null ) {
+			if ( this.parent === null || this.parent.name === 'parentGroup' ) {
 
-				tempMat.copy( this.matrix );
+				tempMat.identity();
 
 			} else {
 

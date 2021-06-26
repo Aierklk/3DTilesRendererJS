@@ -1,4 +1,4 @@
-import { Box3, Camera, Vector2, Matrix4, WebGLRenderer, Object3D, LoadingManager } from 'three';
+import { Box3, Camera, Vector2, Matrix4, WebGLRenderer, Object3D, LoadingManager, Group } from 'three';
 import { TilesRendererBase } from '../base/TilesRendererBase';
 import { TilesGroup } from './TilesGroup';
 
@@ -10,6 +10,8 @@ export class TilesRenderer extends TilesRendererBase {
 	manager : LoadingManager;
 
 	group : TilesGroup;
+
+	parseTile( buffer: ArrayBuffer, tile: this, extension: string ) : Promise<Group>;
 
 	getBoundsTransform(target: Matrix4) : Boolean;
 
