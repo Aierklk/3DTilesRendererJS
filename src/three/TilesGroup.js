@@ -10,6 +10,7 @@ export class TilesGroup extends Group {
 
 		super();
 		this.tilesRenderer = tilesRenderer;
+		this.name = "tilesGroup";
 
 	}
 
