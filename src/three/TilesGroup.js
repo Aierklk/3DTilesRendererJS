@@ -11,6 +11,7 @@ export class TilesGroup extends Group {
 		super();
 		this.tilesRenderer = tilesRenderer;
 		this.name = "tilesGroup";
+		this.isParentCallback = null;
 
 	}
 
@@ -37,6 +38,12 @@ export class TilesGroup extends Group {
 			if ( this.parent === null || this.parent.name === 'parentGroup' ) {
 
 				tempMat.identity();
+
+				if ( typeof this.isParentCallback === 'function' ) {
+
+					this.isParentCallback( tempMat );
+
+				}
 
 			} else {
 
