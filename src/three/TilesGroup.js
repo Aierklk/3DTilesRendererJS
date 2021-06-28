@@ -41,7 +41,7 @@ export class TilesGroup extends Group {
 
 				if ( typeof this.isParentCallback === 'function' ) {
 
-					this.isParentCallback( tempMat );
+					tempMat = this.isParentCallback( tempMat );
 
 				}
 
