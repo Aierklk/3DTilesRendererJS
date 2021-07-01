@@ -32,8 +32,8 @@ export class BatchTable {
 
 	getData(
 		key : String,
-		componentType : String | null,
-		type : String | null
+		componentType ?: String | null,
+		type ?: String | null
 	) : Number | String | ArrayBufferView;
 
 }
