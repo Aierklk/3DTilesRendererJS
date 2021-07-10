@@ -65,11 +65,20 @@ export class DebugTilesRenderer extends TilesRenderer {
 
 	}
 
-	loadTileSet( ...args ) {
+	fetchTileSet( ...args ) {
 
-		const pr = super.loadTileSet( ...args );
+		const pr = super.fetchTileSet( ...args );
 		pr
-			.then( () => this.initExtremes() )
+			.then( () => {
+
+				// defer to after the loaded tileset has been initialized
+				Promise.resolve().then( () => {
+
+					this.initExtremes();
+
+				} );
+
+			} )
 			.catch( () => {
 
 				// error is logged internally
@@ -115,7 +124,7 @@ export class DebugTilesRenderer extends TilesRenderer {
 
 			return {
 
-				distanceToCamera: targetTile.cached.distance,
+				distanceToCamera: targetTile.__distanceFromCamera,
 				geometricError: targetTile.geometricError,
 				screenSpaceError: targetTile.__error,
 				depth: targetTile.__depth,
@@ -274,7 +283,7 @@ export class DebugTilesRenderer extends TilesRenderer {
 
 							// We don't update the distance if the geometric error is 0.0 so
 							// it will always be black.
-							const val = Math.min( tile.cached.distance / maxDistance, 1 );
+							const val = Math.min( tile.__distanceFromCamera / maxDistance, 1 );
 							c.material.color.setRGB( val, val, val );
 							break;
 
