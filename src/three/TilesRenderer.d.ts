@@ -7,6 +7,9 @@ export class TilesRenderer extends TilesRendererBase {
 	autoDisableRendererCulling : Boolean;
 	optimizeRaycast : Boolean;
 
+	displayBoxBounds : Boolean;
+	displaySphereBounds : Boolean;
+
 	manager : LoadingManager;
 
 	group : TilesGroup;

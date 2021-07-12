@@ -12,9 +12,14 @@ import {
 	Vector2,
 	Math as MathUtils,
 	Frustum,
-	LoadingManager
+	LoadingManager,
+	Group,
+	Box3Helper,
+	SphereHelper,
 } from 'three';
 import { raycastTraverse, raycastTraverseFirstHit } from './raycastTraverse.js';
+
+function emptyRaycast() {}
 
 const INITIAL_FRUSTUM_CULLED = Symbol( 'INITIAL_FRUSTUM_CULLED' );
 const DEG2RAD = MathUtils.DEG2RAD;
@@ -69,6 +74,15 @@ export class TilesRenderer extends TilesRendererBase {
 
 		super( ...args );
 		this.group = new TilesGroup( this );
+		const boxGroup = new Group();
+		this.group.add( boxGroup );
+
+		const sphereGroup = new Group();
+		this.group.add( sphereGroup );
+
+		this.displayBoxBounds = false;
+		this.displaySphereBounds = false;
+
 		this.cameras = [];
 		this.cameraMap = new Map();
 		this.cameraInfo = [];
@@ -312,6 +326,10 @@ export class TilesRenderer extends TilesRendererBase {
 		const cameras = this.cameras;
 		const cameraMap = this.cameraMap;
 		const cameraInfo = this.cameraInfo;
+
+		// set box or sphere visibility
+		this.boxGroup.visible = this.displayBoxBounds;
+		this.sphereGroup.visible = this.displaySphereBounds;
 
 		if ( cameras.length === 0 ) {
 
@@ -669,6 +687,42 @@ export class TilesRenderer extends TilesRendererBase {
 
 			} );
 
+			const cachedBox = cached.box;
+			const cachedBoxMat = cached.boxTransform;
+
+			// Create debug bounding box
+			// In some cases the bounding box may have a scale of 0 in one dimension resulting
+			// in the NaNs in an extracted rotation so we disable matrix updates instead.
+			const boxHelperGroup = new Group();
+			boxHelperGroup.matrix.copy( cachedBoxMat );
+			boxHelperGroup.matrixAutoUpdate = false;
+
+			const boxHelper = new Box3Helper( cachedBox );
+			boxHelper.raycast = emptyRaycast;
+			boxHelperGroup.add( boxHelper );
+
+			cached.boxHelperGroup = boxHelperGroup;
+
+			if ( this.visibleTiles.has( tile ) && this.displayBoxBounds ) {
+
+				this.boxGroup.add( boxHelperGroup );
+				boxHelperGroup.updateMatrixWorld( true );
+
+			}
+
+			// Create debugbounding sphere
+			const cachedSphere = cached.sphere;
+			const sphereHelper = new SphereHelper( cachedSphere );
+			sphereHelper.raycast = emptyRaycast;
+			cached.sphereHelper = sphereHelper;
+
+			if ( this.visibleTiles.has( tile ) && this.displaySphereBounds ) {
+
+				this.sphereGroup.add( sphereHelper );
+				sphereHelper.updateMatrixWorld( true );
+
+			}
+
 			cached.materials = materials;
 			cached.geometry = geometry;
 			cached.textures = textures;
@@ -734,16 +788,32 @@ export class TilesRenderer extends TilesRendererBase {
 		const scene = tile.cached.scene;
 		const visibleTiles = this.visibleTiles;
 		const group = this.group;
+
+		const cached = tile.cached;
+		const sphereGroup = this.sphereGroup;
+		const boxGroup = this.boxGroup;
+		const boxHelperGroup = cached.boxHelperGroup;
+		const sphereHelper = cached.sphereHelper;
+
 		if ( visible ) {
 
 			group.add( scene );
 			visibleTiles.add( tile );
 			scene.updateMatrixWorld( true );
 
+			boxGroup.add( boxHelperGroup );
+			boxHelperGroup.updateMatrixWorld( true );
+
+			sphereGroup.add( sphereHelper );
+			sphereHelper.updateMatrixWorld( true );
+
 		} else {
 
 			group.remove( scene );
 			visibleTiles.delete( tile );
+
+			boxGroup.remove( boxHelperGroup );
+			sphereGroup.remove( sphereHelper );
 
 		}
 
