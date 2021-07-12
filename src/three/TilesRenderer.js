@@ -91,6 +91,9 @@ export class TilesRenderer extends TilesRendererBase {
 		this._autoDisableRendererCulling = true;
 		this.optimizeRaycast = true;
 
+		this.boxGroup = boxGroup;
+		this.sphereGroup = sphereGroup;
+
 		this.onLoadTileSet = null;
 		this.onLoadModel = null;
 		this.onDisposeModel = null;
