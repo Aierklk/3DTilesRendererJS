@@ -4,6 +4,7 @@ import { PNTSLoader } from './PNTSLoader.js';
 import { I3DMLoader } from './I3DMLoader.js';
 import { CMPTLoader } from './CMPTLoader.js';
 import { TilesGroup } from './TilesGroup.js';
+import { SphereHelper } from './SphereHelper.js';
 import {
 	Matrix4,
 	Box3,
@@ -15,7 +16,6 @@ import {
 	LoadingManager,
 	Group,
 	Box3Helper,
-	SphereHelper,
 } from 'three';
 import { raycastTraverse, raycastTraverseFirstHit } from './raycastTraverse.js';
 
