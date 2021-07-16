@@ -28,6 +28,8 @@ export class TilesRenderer extends TilesRendererBase {
 	setResolution( camera : Camera, resolution : Vector2 ) : Boolean;
 	setResolutionFromRenderer( camera : Camera, renderer : WebGLRenderer ) : Boolean;
 
+	setTileVisible( tile: object, visible: boolean ) : void
+
 	forEachLoadedModel( callback : ( scene : Object3D, tile : object ) => void ) : void;
 
 	onLoadTileSet : ( ( tileSet : object ) => void ) | null;
